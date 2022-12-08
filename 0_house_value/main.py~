@@ -2,8 +2,8 @@ import numpy as np
 import sys
 import time
 import os
-#%load_ext autoreload
-#%autoreload 2
+%load_ext autoreload
+%autoreload 2
 
 def main():
     t0 = time.time()
