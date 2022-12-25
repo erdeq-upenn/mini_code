@@ -8,6 +8,8 @@ import argparse
 import logging as log
 import _pickle as pkl
 
+# import local functions
+from trainer import build
 
 def main(arguments):
     ''' Train or load a model. Evaluate on some tasks. '''
@@ -22,6 +24,8 @@ def main(arguments):
     parser.add_argument('--run_dir', help='directory for saving results, models, etc.', type=str)
 
     args = parser.parse_args(arguments)
+
+    # logistics
     log.basicConfig(format='%(asctime)s: %(message)s', level=log.INFO, datefmt='%m/%d %I:%M:%S %p')
     log_file = os.path.join(args.run_dir, args.log_file)
     file_handler = log.FileHandler(log_file)
@@ -29,7 +33,11 @@ def main(arguments):
     log.info(args)
 
     log.info("Loading tasks...")
-    print(args)
+    start_time = time.time()
+    build(args)
+
+    log.info('\tFinished loading tasks in %.3fs', time.time() - start_time)
+
     print('Done---')
 
 if __name__ == '__main__':
