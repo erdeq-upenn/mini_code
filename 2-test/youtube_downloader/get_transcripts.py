@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec 23 10:50:41 2022
-
 @author: dequan er
 """
-
-import os
+import os,shutil
 import sys
 import time
 import copy
@@ -18,6 +16,8 @@ from youtube_transcript_api.formatters import JSONFormatter,Formatter
 from pytube import YouTube
 import argparse
 import re
+import ffmpeg
+
 
 def download_script(args):
     formatter = Formatter()
@@ -39,6 +39,27 @@ def download_script(args):
     with open('%s/%s.txt'%(args.data_dir,title),'w',encoding='utf-8') as f:
         f.write(ts_txt)
     f.close()
+
+def download_audio(args):
+    t0 = time.time()                                                                                                              
+    url = baseurl + args.id
+    try:
+        yt = YouTube(url)
+        yt.streams.filter(only_audio=True,mime_type='audio/mp4').order_by('abr').desc().first().download()
+    except:
+        print('error')
+    audio_title  = yt.title
+    audio_length = yt.length
+    print("Audio length is : ",audio_length)
+    print("Audio title  is : ",audio_title)
+
+    stream = ffmpeg.input(audio_title+'.mp4')
+    stream = ffmpeg.output(stream, audio_title+'_p.mp4')
+    ffmpeg.run(stream)
+    os.remove(audio_title+'.mp4')
+    t1 = time.time()
+    shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
+
 
 def main(arguments):
     ''' Train or load a model. Evaluate on some tasks. '''
@@ -66,11 +87,15 @@ def main(arguments):
 
     log.info("Loading tasks...")
     start_time = time.time()
-    # start donwload task
-    download_script(args)
-    log.info('\tFinished loading tasks in %.3fs', time.time() - start_time)
-
+    # start donwload task of transcript 
+    if args.mode == 's': 
+        download_script(args)
+        log.info('\tFinished download script tasks in %.3fs', time.time() - start_time)
+    if args.mode == 'a':
+        download_audio(args)   
+        log.info('\tFinished download audio  tasks in %.3fs', time.time() - start_time)
     print('Done---')
 
 if __name__ == '__main__':
+    baseurl = 'https://www.youtube.com/watch?v='
     sys.exit(main(sys.argv[1:]))
