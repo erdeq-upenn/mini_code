@@ -1,40 +1,3 @@
-# # -*- coding: utf-8 -*-
-# """
-# Created on Fri Dec 23 10:50:41 2022
-
-# @author: dequa
-# """
-# from youtube_transcript_api import YouTubeTranscriptApi
-# from youtube_transcript_api.formatters import JSONFormatter,Formatter
-# from pytube import YouTube
-# import argparse
-# import re
-# # parser = argparse.ArgumentDefaultsHelpFormatter(description='Process video')
-# # parser.add_argument('str',)
-
-
-# formatter = Formatter()
-# video_id = 'K8h_xjQ6ufY&t'
-# transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-# transcript = transcript_list.find_manually_created_transcript(['zh-Hans'])
-# ts = transcript.fetch()
-# ts_txt = ','.join([i['text'] for i in ts])
-
-# url = 'https://youtu.be/' + video_id
-# title = YouTube(url).title
-# try:
-#     title = title.split('|')[1]
-#     title = ''.join(re.findall(r'[\u4e00-\u9fa5]',title))
-# except:
-#     print('Title not splitable...')
-#     pass
-
-# with open('%s.txt'%title,'w',encoding='utf-8') as f:
-#     f.write(ts_txt)
-# f.close()
-
-# print('All done %s...'%title)
-
 # -*- coding: utf-8 -*-
 """
 Created on Fri Dec 23 10:50:41 2022
@@ -82,11 +45,15 @@ def main(arguments):
     parser = argparse.ArgumentParser(description='')
 
     # Logistics
-    parser.add_argument('--id', help='-1 if no CUDA, else gpu id', type=str, default='')
+    parser.add_argument('--id', help='youtube ID, not the url', type=str, default='')
+
+    # download mode
+    parser.add_argument('--mode', help='mode of download. "s" script,"a" audio, "v" video', choices=['s', 'a', 'v'],default='s')
+
     # path and logging
     parser.add_argument('--log_file', help='file to log to', type=str, default='log.log')
-    parser.add_argument('--data_dir', help='directory containing shared preprocessing', type=str)
-    parser.add_argument('--log_dir', help='directory for saving results, models, etc.', type=str)
+    parser.add_argument('--data_dir', help='directory containing shared preprocessing', type=str,default='data')
+    parser.add_argument('--log_dir', help='directory for saving results, models, etc.', type=str,default='log')
 
     args = parser.parse_args(arguments)
 
