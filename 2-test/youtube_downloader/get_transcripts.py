@@ -53,13 +53,15 @@ def download_audio(args):
     audio_length = yt.length
     print("Audio length is : ",audio_length)
     print("Audio title  is : ",audio_title)
-
     stream = ffmpeg.input(audio_title+'.mp4')
     stream = ffmpeg.output(stream, audio_title+'_p.mp4')
-    ffmpeg.run(stream)
-    os.remove(audio_title+'.mp4')
-    t1 = time.time()
-    shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
+    try:    
+        ffmpeg.run(stream)
+        os.remove(audio_title+'.mp4')
+        t1 = time.time()
+        shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
+    except:
+        print('change name and retry...')
 
 
 def main(arguments):
