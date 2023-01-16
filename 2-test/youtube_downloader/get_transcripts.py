@@ -42,7 +42,7 @@ def download_script(args):
     f.close()
 
 def download_audio(args):
-    t0 = time.time()                                                                                                              
+    t0 = time.time()
     url = baseurl + args.id
     try:
         yt = YouTube(url)
@@ -55,14 +55,34 @@ def download_audio(args):
     print("Audio title  is : ",audio_title)
     stream = ffmpeg.input(audio_title+'.mp4')
     stream = ffmpeg.output(stream, audio_title+'_p.mp4')
-    try:    
-        ffmpeg.run(stream)
-        os.remove(audio_title+'.mp4')
-        t1 = time.time()
-        shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
+    try:
+       ffmpeg.run(stream)
+       os.remove(audio_title+'.mp4')
+       t1 = time.time()
+       shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
     except:
-        print('change name and retry...')
-
+       print('change name and retry...')
+#     try:
+#         process_audio(audio_title)
+#         os.remove(audio_title+'.mp4')
+#         shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
+#     except:
+#         audio_title_s = yt.title.split()[0]
+#         shutil.move(audio_title,audio_title_s)
+#         process_audio(audio_title_s)
+#
+#         os.remove(audio_title_s+'.mp4')
+#         shutil.move(audio_title_s+'_p.mp4',os.path.join(args.data_dir,audio_title_s+'_p.mp4'))
+#
+# def process_audio(title):
+#     print("Audio title  is : ",title)
+#     try:
+#         stream = ffmpeg.input(audio_title+'.mp4')
+#         stream = ffmpeg.output(stream, audio_title+'_p.mp4')
+#         ffmpeg.run(stream)
+#     except:
+#         print('ffmpeg naming error, exiting...')
+#         sys.exit(1)
 
 def main(arguments):
     ''' Train or load a model. Evaluate on some tasks. '''
@@ -90,12 +110,12 @@ def main(arguments):
 
     log.info("Loading tasks...")
     start_time = time.time()
-    # start donwload task of transcript 
-    if args.mode == 's': 
+    # start donwload task of transcript
+    if args.mode == 's':
         download_script(args)
         log.info('\tFinished download script tasks in %.3fs', time.time() - start_time)
     if args.mode == 'a':
-        download_audio(args)   
+        download_audio(args)
         log.info('\tFinished download audio  tasks in %.3fs', time.time() - start_time)
     print('Done---')
 
