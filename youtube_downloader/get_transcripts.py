@@ -29,7 +29,7 @@ def download_script(args):
     ts_txt = ','.join([i['text'] for i in ts])
 
     url = 'https://youtu.be/' + video_id
-    title = YouTube(url).title
+    title = YouTube(url).streams[0].title
     try:
         title = title.split('|')[1]
         title = ''.join(re.findall(r'[\u4e00-\u9fa5]',title))
