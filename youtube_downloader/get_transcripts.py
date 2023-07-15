@@ -18,7 +18,8 @@ from pytube import YouTube
 import argparse
 import re
 import ffmpeg
-
+import pandas as pd
+import numpy as np
 
 def download_script(args):
     formatter = Formatter()
@@ -37,6 +38,56 @@ def download_script(args):
         print('Title not splitable...')
         pass
 
+    with open('%s/%s.txt'%(args.data_dir,title),'w',encoding='utf-8') as f:
+        f.write(ts_txt)
+    f.close()
+
+def download_script_srt(args):
+    # This will download in srt format and convert to txt 
+    # if there is a pause, automatic generate paragraphs
+    # Current only work on zh CN 
+
+    formatter = Formatter()
+    video_id = args.id
+    #transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+    #transcript = transcript_list.find_manually_created_transcript(['zh-Hans'])
+    #ts = transcript.fetch()
+    #ts_txt = ','.join([i['text'] for i in ts])
+
+    url = 'https://youtu.be/' + video_id
+    title = YouTube(url).streams[0].title
+    try:
+        title = title.split('|')[1]
+        title = ''.join(re.findall(r'[\u4e00-\u9fa5]',title))
+    except:
+        print('Title not splitable...')
+        pass
+
+    # fetch srt and convert to txt based on time 
+    yt = YouTube(url)
+    yt.streams
+    caption = yt.captions.get_by_language_code('zh-Hans')
+    cpation_srt = caption.generate_srt_captions()
+    ss = cpation_srt.split('\n\n')
+    colname = ['index','start','mark','end','description']
+    res = []
+    for s in ss:
+        record = dict(zip(colname,s.split()))
+        res.append(record)
+    df = pd.DataFrame(res)
+    df.start = pd.to_datetime(df.start)
+    df.end = pd.to_datetime(df.end)
+    df['new_line'] = np.where((df.start-df.end.shift(1)) > pd.Timedelta('00:00:00.2'), True, False)
+    output = []
+
+    def func(x,output):
+        output.append(x['description'])
+        if x['new_line']:
+            # output.append('\n%s\n'%x['end'])
+            output.append('\n\n')
+    df.apply(lambda x: func(x,output),axis=1);
+    ts_txt = ''.join(output)
+         
     with open('%s/%s.txt'%(args.data_dir,title),'w',encoding='utf-8') as f:
         f.write(ts_txt)
     f.close()
@@ -112,7 +163,8 @@ def main(arguments):
     start_time = time.time()
     # start donwload task of transcript
     if args.mode == 's':
-        download_script(args)
+        #download_script(args)
+        download_script_srt(args)
         log.info('\tFinished download script tasks in %.3fs', time.time() - start_time)
     if args.mode == 'a':
         download_audio(args)
