@@ -49,10 +49,6 @@ def download_script_srt(args):
 
     formatter = Formatter()
     video_id = args.id
-    #transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
-    #transcript = transcript_list.find_manually_created_transcript(['zh-Hans'])
-    #ts = transcript.fetch()
-    #ts_txt = ','.join([i['text'] for i in ts])
 
     url = 'https://youtu.be/' + video_id
     title = YouTube(url).streams[0].title
@@ -74,6 +70,7 @@ def download_script_srt(args):
     for s in ss:
         record = dict(zip(colname,s.split()))
         res.append(record)
+
     df = pd.DataFrame(res)
     df.start = pd.to_datetime(df.start)
     df.end = pd.to_datetime(df.end)
@@ -88,7 +85,7 @@ def download_script_srt(args):
     df.apply(lambda x: func(x,output),axis=1);
     ts_txt = ''.join(output)
          
-    with open('%s/%s.txt'%(args.data_dir,title),'w',encoding='utf-8') as f:
+    with open('%s/%s.md'%(args.data_dir,title),'w',encoding='utf-8') as f:
         f.write(ts_txt)
     f.close()
 
