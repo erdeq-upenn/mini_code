@@ -79,8 +79,9 @@ def download_script_srt(args):
 
     def func(x,output):
         output.append(x['description'])
+        output.append('. ')
+
         if x['new_line']:
-            # output.append('\n%s\n'%x['end'])
             output.append('\n\n')
     df.apply(lambda x: func(x,output),axis=1);
     ts_txt = ''.join(output)
