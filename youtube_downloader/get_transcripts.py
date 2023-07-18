@@ -79,7 +79,7 @@ def download_script_srt(args):
 
     def func(x,output):
         output.append(x['description'])
-        output.append('. ')
+        output.append('。 ')
 
         if x['new_line']:
             output.append('\n\n')
