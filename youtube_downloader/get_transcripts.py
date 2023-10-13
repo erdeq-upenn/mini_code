@@ -31,6 +31,7 @@ def download_script(args):
 
     url = 'https://youtu.be/' + video_id
     title = YouTube(url).streams[0].title
+    print(title)
     try:
         title = title.split('|')[1]
         title = ''.join(re.findall(r'[\u4e00-\u9fa5]',title))
@@ -51,6 +52,9 @@ def download_script_srt(args):
     video_id = args.id
 
     url = 'https://youtu.be/' + video_id
+    yt = YouTube(url)
+    yt.streams
+
     title = YouTube(url).streams[0].title
     try:
         title = title.split('|')[1]
@@ -60,8 +64,6 @@ def download_script_srt(args):
         pass
 
     # fetch srt and convert to txt based on time 
-    yt = YouTube(url)
-    yt.streams
     caption = yt.captions.get_by_language_code('zh-Hans')
     cpation_srt = caption.generate_srt_captions()
     ss = cpation_srt.split('\n\n')
@@ -132,7 +134,27 @@ def download_audio(args):
 #     except:
 #         print('ffmpeg naming error, exiting...')
 #         sys.exit(1)
-
+def download_video(args):
+    t0 = time.time()
+    url = baseurl + args.id
+    try:
+        yt = YouTube(url)
+        yt.streams.filter(only_audio=False,mime_type='video/mp4').order_by('abr').desc().first().download()
+    except:
+        print('error')
+    audio_title  = yt.title
+    audio_length = yt.length
+    print("Audio length is : ",audio_length)
+    print("Audio title  is : ",audio_title)
+    stream = ffmpeg.input(audio_title+'.mp4')
+    stream = ffmpeg.output(stream, audio_title+'_p.mp4')
+    try:
+       ffmpeg.run(stream)
+       os.remove(audio_title+'.mp4')
+       t1 = time.time()
+       shutil.move(audio_title+'_p.mp4',os.path.join(args.data_dir,audio_title+'_p.mp4'))
+    except:
+       print('change name and retry...')
 def main(arguments):
     ''' Train or load a model. Evaluate on some tasks. '''
     parser = argparse.ArgumentParser(description='')
@@ -167,6 +189,9 @@ def main(arguments):
     if args.mode == 'a':
         download_audio(args)
         log.info('\tFinished download audio  tasks in %.3fs', time.time() - start_time)
+    if args.mode == 'v':
+        download_video(args)
+        log.info('\tFinished download video  tasks in %.3fs', time.time() - start_time)
     print('Done---')
 
 if __name__ == '__main__':
