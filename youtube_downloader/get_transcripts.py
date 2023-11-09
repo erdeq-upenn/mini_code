@@ -14,12 +14,21 @@ import logging as log
 import _pickle as pkl
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import JSONFormatter,Formatter
+from pytube.cli import on_progress
 from pytube import YouTube
 import argparse
 import re
 import ffmpeg
 import pandas as pd
 import numpy as np
+from datetime import date, timedelta, datetime
+
+
+def now_str():
+    """
+    return current date-time as a string like: 2020-01-01 18:20:30
+    """
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def download_script(args):
     formatter = Formatter()
@@ -137,15 +146,17 @@ def download_audio(args):
 def download_video(args):
     t0 = time.time()
     url = baseurl + args.id
+    print('Downloading URL: ',url)
     try:
-        yt = YouTube(url)
+        yt = YouTube(url,on_progress_callback=on_progress)
         yt.streams.filter(only_audio=False,mime_type='video/mp4').order_by('abr').desc().first().download()
+        #yt.streams.get_highest_resolution().download()
     except:
         print('error')
     audio_title  = yt.title
     audio_length = yt.length
-    print("Audio length is : ",audio_length)
-    print("Audio title  is : ",audio_title)
+    print("Video length is : ",audio_length)
+    print("Video title  is : ",audio_title)
     stream = ffmpeg.input(audio_title+'.mp4')
     stream = ffmpeg.output(stream, audio_title+'_p.mp4')
     try:
@@ -184,6 +195,7 @@ def main(arguments):
     # start donwload task of transcript
     if args.mode == 's':
         #download_script(args)
+        print('Start Downloading script at $s...'%now_str())
         download_script_srt(args)
         log.info('\tFinished download script tasks in %.3fs', time.time() - start_time)
     if args.mode == 'a':
