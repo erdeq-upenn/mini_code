@@ -1,3 +1,4 @@
 # mini_code
 This is a repository of mini programs 
-test
+test  
+This was good 
