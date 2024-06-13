@@ -1,0 +1,7 @@
+#tensorflow-gpu==2.9.0
+keras==2.9.0
+lightgbm==3.3.2
+pandas 
+matplotlib
+seaborn
+kaggle

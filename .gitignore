@@ -130,3 +130,7 @@ dmypy.json
 
 # media files 
 *.mp4
+
+# data files 
+*.csv
+*.zip
