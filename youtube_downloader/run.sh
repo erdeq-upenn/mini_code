@@ -5,12 +5,12 @@
 # ----------------------------------------------------------------------------------------
 #python get_transcripts.py --id "tNjwb9Qz0V8"  --log_dir='log' --data_dir='data' --mode='v'
 #python get_transcripts.py --id "kEDiY3YuRoI"  --log_dir='log' --data_dir='data' --mode='v'
-#python get_transcripts.py --id "RPB3qVwWTUg"  --log_dir='log' --data_dir='data' --mode='v'
+python3 get_transcripts.py --id "RPB3qVwWTUg"  --log_dir='log' --data_dir='data' --mode='v'
 # ----------------------------------------------------------------------------------------
 ##     Wei
 # ----------------------------------------------------------------------------------------
 #python3 get_transcripts.py --id "Tl2td45qmJo"  --log_dir='log' --data_dir='data' --mode='v'
-python3 get_transcripts.py --id "2Nv2VB7BHVI"  --log_dir='log' --data_dir='data' --mode='v'
+# python3 get_transcripts.py --id "2Nv2VB7BHVI"  --log_dir='log' --data_dir='data' --mode='v'
 #python get_transcripts.py --id "ZTTHwPsWT-I"  --log_dir='log' --data_dir='data' --mode='v'
 #python get_transcripts.py --id "3i2D6-hkOss"  --log_dir='log' --data_dir='data' --mode='v'
 #python get_transcripts.py --id "EyeI1rwlIHw"  --log_dir='log' --data_dir='data' --mode='v'
