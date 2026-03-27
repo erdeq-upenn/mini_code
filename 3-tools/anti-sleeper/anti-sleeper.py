@@ -25,7 +25,7 @@ class AntiSleepApp:
             dx = random.randint(-5, 5)
             dy = random.randint(-5, 5)
             pyautogui.moveTo(x + dx, y + dy, duration=0.2)
-            time.sleep(6)  # Wait 60 seconds before next move
+            time.sleep(10)  # Wait 60 seconds before next move
 
     def start(self):
         if not self.thread or not self.thread.is_alive():

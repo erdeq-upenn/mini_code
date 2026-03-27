@@ -1,0 +1,28 @@
+[project]
+name = "option-valuator"
+version = "0.1.0"
+description = "Black-Scholes option pricer with Greeks and implied volatility"
+authors = [
+    { name = "DE", email = "dequan.er@nationaldebtrelief.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12",
+    "scipy>=1.13",
+    "numpy>=1.26",
+    "pydantic>=2.7",
+    "rich>=13.7",
+]
+
+[project.scripts]
+optval = "option_valuator.main:app"
+
+[build-system]
+requires = ["uv_build>=0.9.2,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "pytest-cov>=5.0",
+]
