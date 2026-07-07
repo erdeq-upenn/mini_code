@@ -5,7 +5,7 @@
 # ----------------------------------------------------------------------------------------
 #python get_transcripts.py --id "tNjwb9Qz0V8"  --log_dir='log' --data_dir='data' --mode='v'
 #python get_transcripts.py --id "kEDiY3YuRoI"  --log_dir='log' --data_dir='data' --mode='v'
-python3 get_transcripts.py --id "RPB3qVwWTUg"  --log_dir='log' --data_dir='data' --mode='v'
+python3 get_transcripts.py --id "-g4dh1t8IFA"  --log_dir='log' --data_dir='data' --mode='s'
 # ----------------------------------------------------------------------------------------
 ##     Wei
 # ----------------------------------------------------------------------------------------

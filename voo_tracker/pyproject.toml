@@ -1,0 +1,9 @@
+[project]
+name = "voo-tracker"
+version = "0.1.0"
+description = "This is a simple Python project that tracks the VOO ETF and provides insights on its performance."
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "yfinance>=0.2.40",
+]

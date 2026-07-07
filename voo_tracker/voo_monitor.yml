@@ -1,0 +1,43 @@
+name: VOO Daily Monitor
+
+on:
+  schedule:
+    # 覆盖夏令时(EDT, UTC-4) 和 冬令时(EST, UTC-5) 两种情况下 9:35 ET 的时间
+    # 13:35 UTC -> 9:35 EDT（大约 3月-11月）
+    - cron: '35 13 * * 1-5'
+    # 14:35 UTC -> 9:35 EST（大约 11月-3月）
+    - cron: '35 14 * * 1-5'
+  workflow_dispatch: {}   # 允许手动触发，方便测试
+
+permissions:
+  contents: write   # 允许工作流把 state.json 提交回仓库
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run monitor
+        env:
+          TICKER: VOO
+          WINDOW: '20'
+          K_MULTIPLIER: '2.0'
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python voo_monitor.py
+
+      - name: Commit updated state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || git commit -m "Update state.json [skip ci]"
+          git push
